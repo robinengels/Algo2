@@ -1,4 +1,7 @@
 import random
+import networkx as nx
+import matplotlib.pyplot as plt
+from networkx.algorithms import bipartite
 
 def generate_graph():
 	nbre_arrete = random.randint(1,8)
@@ -22,6 +25,26 @@ def print_graph(graph):
 
 		print()
 
+def affiche_graph(graph):
 
-graph  = generate_graph()
-print_graph(graph)
+
+
+	X, Y = bipartite.sets(graph)
+	print(X,Y)
+
+	pos = dict()
+	cmpt = 0
+	for i in X:
+		cmpt += 1
+		pos.update({i:(1,cmpt)})
+
+	cmpt = 0
+	for i in Y:
+		cmpt += 1
+		pos.update({i:(2,cmpt)})
+
+	nx.draw(B, pos=pos,with_labels = True)
+	plt.show()
+
+
+
