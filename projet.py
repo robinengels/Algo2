@@ -4,19 +4,19 @@ import matplotlib.pyplot as plt
 from networkx.algorithms import bipartite
 
 class Graph:
-	def __init__(self):
-		self.nbr_aretes = random.randint(1,8)
+	def __init__(self,max_aretes,max_noeuds,proba):
+		self.nbr_aretes = random.randint(1,max_aretes)
 		print("nbr aretes " + str(self.nbr_aretes))
-		self.nbr_noeuds = random.randint(1,10)
+		self.nbr_noeuds = random.randint(1,max_noeuds)
 		print("nbr noeuds " + str(self.nbr_noeuds))
 		self.graph = [[]for i in range(self.nbr_noeuds)] #Graph contenant une liste des noeuds, et chaque sous liste contien les aretes du noeud
 		
+
 		for i in range(self.nbr_aretes): #Itere pour chaque arete et commence à 0
 			for j in self.graph: #Itere a chaque noeud
-				if random.randint(1,3) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
+				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					j.append(i+1) #+1 parce que i commence à 0
-
-
+        
 
 		#self.graph = [[0],[0,1],[0,1,2],[3],[2],[2],[]] #temporaire, pour faire des testes sur la cyclicite
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
@@ -122,7 +122,5 @@ class Graph:
 		plt.show()
 
 
-
-
-a = Graph()
+a = Graph(5,10,2)
 a.affiche_graph()
