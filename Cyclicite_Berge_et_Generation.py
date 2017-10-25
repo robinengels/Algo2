@@ -1,16 +1,19 @@
 import random
 
 class Graph:
-	def __init__(self):
-		nbr_aretes = random.randint(1,8)
-		print("nbr aretes " + str(nbr_aretes))
-		nbr_noeuds = random.randint(1,10)
-		print("nbr noeuds " + str(nbr_noeuds))
-		self.graph = [[]for i in range(nbr_noeuds)] #Graph contenant une liste des noeuds, et chaque sous liste contien les aretes du noeud
-		for i in range(nbr_aretes): #Itere pour chaque arete et commence à 0
+	def __init__(self,max_aretes,max_noeuds,proba):
+		self.nbr_aretes = random.randint(1,max_aretes)
+		print("nbr aretes " + str(self.nbr_aretes))
+		self.nbr_noeuds = random.randint(1,max_noeuds)
+		print("nbr noeuds " + str(self.nbr_noeuds))
+		self.graph = [[]for i in range(self.nbr_noeuds)] #Graph contenant une liste des noeuds, et chaque sous liste contien les aretes du noeud
+		
+
+		for i in range(self.nbr_aretes): #Itere pour chaque arete et commence à 0
 			for j in self.graph: #Itere a chaque noeud
-				if random.randint(1,3) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
+				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					j.append(i+1) #+1 parce que i commence à 0
+        
 
 		#self.graph = [[0],[0,1],[0,1,2],[3],[2],[2],[]] #temporaire, pour faire des testes sur la cyclicite
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
@@ -75,6 +78,43 @@ class Graph:
 				self.cherche_aretes(point)
 				self.aretes_visitees.pop()
 			i += 1
+
+	def affiche_graph(self):
+
+
+		graph_affiche =  nx.Graph()
+		left_nodes = [a for a in range(1,self.nbr_noeuds+1)]
+
+		right_nodes = [chr(i+96) for i in range(1,self.nbr_aretes+1)]
+		print(right_nodes,left_nodes)
+		graph_affiche.add_nodes_from(left_nodes,bipartite=0)
+		graph_affiche.add_nodes_from(right_nodes,bipartite=1)
+
+		
+		edge = []
+		for i in self.graph:
+			current_node = self.graph.index(i)+1
+			if i != []:
+				for j in i:
+					current_edge = chr(j+96)
+					edge.append((current_node,current_edge))
+		graph_affiche.add_edges_from(edge)		
+
+		pos = dict()
+		cmpt = 0
+		for i in left_nodes:
+			cmpt += 1
+			pos.update({i:(1,cmpt)})
+
+		cmpt = 0
+		for i in right_nodes:
+			cmpt += 1
+			pos.update({i:(2,cmpt)})
+
+
+		print(graph_affiche.nodes())
+		nx.draw(graph_affiche, pos=pos,with_labels = True)
+		plt.show()
 
 
 test = Graph()
