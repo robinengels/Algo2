@@ -16,7 +16,7 @@ class Graph:
         
 
 		#self.graph = [[0],[0,1],[0,1,2],[3],[2],[2],[]] #temporaire, pour faire des testes sur la cyclicite
-		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
+		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]bite
 		print(self.graph)
 
 
