@@ -95,12 +95,14 @@ class Graph:
 
 		
 		edge = []
-		for i in self.graph:
-			current_node = self.graph.index(i)+1
-			if i != []:
-				for j in i:
+		for i in range(0,len(self.graph)):
+			current_node = i+1
+
+			if self.graph[i] != []:
+				for j in self.graph[i]:
 					current_edge = chr(j+96)
 					edge.append((current_node,current_edge))
+
 		graph_affiche.add_edges_from(edge)		
 
 		pos = dict()
@@ -122,5 +124,5 @@ class Graph:
 		plt.show()
 
 
-a = Graph(5,10,2)
+a = Graph(1,5,2)
 a.affiche_graph()

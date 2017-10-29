@@ -117,6 +117,7 @@ class Graph:
 		plt.show()
 
 
-test = Graph()
+test = Graph(5,10,3)
+test.affiche_graph()
 print(Graph())
 print(test.berge())
