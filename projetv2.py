@@ -21,7 +21,7 @@ class Graph:
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
-		self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
+		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
 		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
 		print("Test:",self.graph)
@@ -91,6 +91,45 @@ class Graph:
 		plt.show()
 
 
+	def find_clique(self):
+		clique = []
+		voisin = []
+		current_clique = []
+		for i in self.graph:
+			voisin = self.voisin(i)
+			print(i,voisin)
+			current_clique = []
+			correct = True
+			for j in voisin:
+				for k in voisin:
+					if k not in self.voisin(j):
+						correct = False
+				if correct and j not in current_clique:
+					current_clique.append(j)
+
+
+
+
+			if (len(current_clique)>=3 and clique == []):
+				clique = current_clique
+			elif len(current_clique) >= len(clique) and clique != []:
+				clique = current_clique
+
+		return clique
+
+	def voisin(self,node):
+		"""Node est le numéro du noeuds pour le quelle on veut récupérer la liste des voisins"""
+		result = [node]
+		arc = self.graph[node]
+		for i in self.graph:
+			for j in arc:
+				if j in self.graph[i] and i not in result:
+					result.append(i)
+
+
+		return result
+
+
 
 	"""def berge(self):
 		point_de_depart = 0
@@ -145,4 +184,5 @@ class Graph:
 		
 		
 a = Graph(1,5,4)
+print("clique" + str(a.find_clique()))
 a.affiche_graph_primal()
