@@ -36,7 +36,7 @@ class Graph:
 		return("")
 
 
-	def affiche_graph_bipartie(self):
+	def affiche_graphe_bipartie(self):
 		graph_affiche =  nx.Graph()
 		left_nodes = self.graph.keys()
 
@@ -71,7 +71,7 @@ class Graph:
 		nx.draw(graph_affiche, pos=pos,with_labels = True)
 		plt.show()
 
-	def affiche_graph_primal(self):
+	def affiche_graphe_primal(self):
 		pos = {}
 		graph_affiche = nx.Graph()
 		
@@ -131,58 +131,69 @@ class Graph:
 
 
 
-	"""def berge(self):
-		point_de_depart = 0
+	def berge(self):
+		point_de_depart = 1 #Commence a 1 car le graphe commence a 1, et non a 0
 		self.derniere_arete_visitee = None #Stocke la derniere arete visitee pour eviter les allers retours
 		self.dernier_point_visite = None #Stocke le dernier point visite poour eviter les allers retours
 		self.points_visites = [] #Stocke les points visites pour eviter les allers retours, et si on tombe deux fois sur le meme point, alors il est cyclique
-		self.arete_a_ne_pas_aller = []
+		self.aretes_a_ne_pas_aller = []
 		self.result = False
 		
-		while not self.result and point_de_depart < len(self.graph):
-			self.arete_a_ne_pas_aller = [] #Nettoie la liste
+		while not self.result and point_de_depart < len(self.graph)+1:
+			self.aretes_a_ne_pas_aller = [] #Nettoie la liste
 			self.points_visites = [point_de_depart] #Iinitialise la liste des points visites avec uniquement le point de depart dedans
 			self.dernier_point_visite = point_de_depart
 			self.derniere_arete_visitee = None
 			print("\n\npoint de depart: ",str(point_de_depart))
 			self.cherche_aretes(point_de_depart)
 			point_de_depart += 1
-		return(self.result)""" #TODO
+			print()
+			print(self.result)
+			print()
+		return(self.result)
 	
-	"""def cherche_aretes(self,point):
-		Recherche toutes les aretes qui partent d'un point et fais passer la fonction cherche_points dessus
+	def cherche_aretes(self,point):
+		"""Recherche toutes les aretes qui partent d'un point et fais passer la fonction cherche_points dessus"""
 		arete = 0
-		if self.derniere_arete_visitee != None:
-			self.arete_a_ne_pas_aller.append(self.derniere_arete_visitee)
-		print(self.arete_a_ne_pas_aller)
-		while not self.result and arete < len(self.graph[point]) and self.graph[point][arete] not in self.arete_a_ne_pas_aller:
-			print("arete connectees:"+str(self.graph[point][arete]))
+		#if self.derniere_arete_visitee != None:
+		#	self.aretes_a_ne_pas_aller.append(self.derniere_arete_visitee)
+		#print(self.arete_a_ne_pas_aller)
+		print("Aretes connectees: ",self.graph[point])
+		while not self.result and arete < len(self.graph[point]) and self.graph[point][arete] not in self.aretes_a_ne_pas_aller:
+			print("Arete en cours: ",self.graph[point][arete])
 			self.derniere_arete_visitee = self.graph[point][arete]
 			print("derniere arete visitee" + str(self.derniere_arete_visitee))
+			self.aretes_a_ne_pas_aller.append(self.graph[point][arete])
 			self.cherche_points(self.graph[point][arete])
-			arete += 1""" #TODO
+			self.aretes_a_ne_pas_aller.pop()
+			arete += 1
 
-	"""def cherche_points(self,arete):
-		Recherche toutes les aretes qui partent d'un point et fais passer la fonction cherche_arete dessus jusqu'a ce qu'on retombe sur le point de depart ou qu'on ai visite tout les points
+	def cherche_points(self,arete):
+		"""Recherche toutes les aretes qui partent d'un point et fais passer la fonction cherche_arete dessus jusqu'a ce qu'on retombe sur le point de depart ou qu'on ai visite tout les points"""
 		points_connecte = []
 		for i in range(len(self.graph)):
-			if arete in self.graph[i] and i != self.dernier_point_visite:  #Si l'arete en question est liee a un point (dans la liste du point), alors le point est connecte a cette arete.
-				points_connecte.append(i)
+			if arete in self.graph[i+1] and i+1 != self.dernier_point_visite:  #Si l'arete en question est liee a un point (dans la liste du point), alors le point est connecte a cette arete.
+				points_connecte.append(i+1)
 
 
 		i = 0
 		while not self.result and i < len(points_connecte):
 			point = points_connecte[i]
 			print("point visite: "+str(point))
+			temp = self.dernier_point_visite #Temp sauvegarde le dernier point visite au travers de la recursivite
 			self.dernier_point_visite = point
 			if point in self.points_visites:
 				self.result = True
 			else:
+				self.points_visites.append(point)
 				self.cherche_aretes(point)
-			i += 1"""#TODO
+				self.points_visites.pop()
+			self.dernier_point_visite = temp
+			i += 1
 
 		
 		
 a = Graph(1,5,4)
 print("clique" + str(a.find_clique()))
-a.affiche_graph_primal()
+print(a.berge())
+a.affiche_graphe_bipartie()
