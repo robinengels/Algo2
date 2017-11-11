@@ -129,11 +129,13 @@ class Graph:
 
 	def is_chordal(self):
 
+
+
 		pass
 
 
-	def sommet_simplicial(self,node):
-
+	def is_simplicial(self,node):
+		"""Renvoie True si le sommet envoyé est simplicial"""
 
 		out = True
 		voisin = self.get_voisin(node)[1:]
