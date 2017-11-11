@@ -131,6 +131,38 @@ class Graph:
 
 
 
+	def is_chordal(self):
+
+		pass
+
+
+	def sommet_simplicial(self,node):
+
+
+		out = True
+		voisin = self.voisin(node)[1:]
+		if voisin != []:
+			to_compare = self.voisin(voisin[0])
+			for i in voisin:
+				if self.voisin(i).sort() != to_compare.sort():
+					out = False
+					break
+		return out	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	"""def berge(self):
 		point_de_depart = 0
 		self.derniere_arete_visitee = None #Stocke la derniere arete visitee pour eviter les allers retours
@@ -183,6 +215,8 @@ class Graph:
 
 		
 		
-a = Graph(1,5,4)
-print("clique" + str(a.find_clique()))
+
+
+a = Graph(1,5,3)
+print(a.sommet_simplicial(1))
 a.affiche_graph_primal()
