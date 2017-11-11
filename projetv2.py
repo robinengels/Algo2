@@ -146,8 +146,14 @@ class Graph:
 		return out	
 
 
-
-
+	def clean_graph(self):
+		"""Efface tout les noeuds qui n'ont aucun voisin"""
+		cle = list(self.graph)
+		for i in cle:
+			voisin = self.get_voisins(i)
+			voisin.pop()
+			if voisin == []:
+				del self.graph[i]
 
 
 
@@ -242,5 +248,6 @@ class Graph:
 		
 
 a = Graph(4,6,3)
-print("clique" + str(a.find_clique()))
+a.affiche_graphe_primal()
+a.clean_graph()
 a.affiche_graphe_primal()
