@@ -7,10 +7,10 @@ class Graph:
 	def __init__(self,max_aretes,max_noeuds,proba):
 		self.graph = {}
 		self.nbr_aretes = random.randint(1,max_aretes)
-		self.nbr_aretes = 3
+		#self.nbr_aretes = 3
 		print("nbr aretes " + str(self.nbr_aretes))
 		self.nbr_noeuds = random.randint(1,max_noeuds)
-		self.nbr_noeuds = 7
+		#self.nbr_noeuds = 7
 		print("nbr noeuds " + str(self.nbr_noeuds))
 		for i in range(self.nbr_noeuds):
 			self.graph[i+1] = [] #Self.graph est un dico avec en clef le umero du noeud et en element une liste contenant les aretes auxquelles il est connecté
@@ -24,7 +24,7 @@ class Graph:
 		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
 		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
 		
-		self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
+		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
 		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
 		print("Test:",self.graph)
@@ -85,8 +85,6 @@ class Graph:
 		nx.draw_circular(graph_affiche, with_labels = True)
 		plt.show()
 
-
-<<<<<<< HEAD
 	def find_clique(self):
 		clique = []
 		voisin = []
@@ -100,15 +98,15 @@ class Graph:
 				for k in voisin:
 					if k not in self.voisin(j):
 						correct = False
+				print(current_clique)
 				if correct and j not in current_clique:
 					current_clique.append(j)
 
 
 
 
-			if (len(current_clique)>=3 and clique == []):
-				clique = current_clique
-			elif len(current_clique) >= len(clique) and clique != []:
+
+			if len(current_clique) >= len(clique):
 				clique = current_clique
 
 		return clique
@@ -210,7 +208,7 @@ class Graph:
 			i += 1
 
 
-	def find_clique(self):
+	"""def find_clique(self):
 		clique = []
 		voisin = []
 		current_clique = []
@@ -229,7 +227,7 @@ class Graph:
 			if ((clique == [] and len(current_clique)>=3) or (clique != [] and len(current_clique) >= len(clique))):
 				clique = current_clique
 
-		return clique
+		return clique"""
 
 	def get_voisins(self,node):
 		"""Node est le numéro du noeuds pour lequel on veut récupérer la liste des voisins"""
@@ -243,7 +241,6 @@ class Graph:
 
 		
 
-a = Graph(1,5,4)
+a = Graph(4,6,3)
 print("clique" + str(a.find_clique()))
 a.affiche_graphe_primal()
-
