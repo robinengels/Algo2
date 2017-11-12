@@ -126,21 +126,34 @@ class Graph:
 
 
 	def is_chordal(self):
+		self.clean_graph()
+		end = False
+		while not end:
+			deleted = False
+			clique = self.find_clique()
+			for i in clique:
+				if self.is_simplicial(i):
+					del self.graph[i]
+					deleted = True
+			if not deleted:
+				end = True
+				chordal = False
+			if self.graph == {}:
+				end = True
+				chordal = True
 
-
-
-		pass
+		return end
 
 
 	def is_simplicial(self,node):
 		"""Renvoie True si le sommet envoyé est simplicial"""
 
 		out = True
-		voisin = self.get_voisin(node)[1:]
+		voisin = self.get_voisins(node)[1:]
 		if voisin != []:
-			to_compare = self.get_voisin(voisin[0])
+			to_compare = self.get_voisins(voisin[0])
 			for i in voisin:
-				if self.get_voisin(i).sort() != to_compare.sort():
+				if self.get_voisins(i).sort() != to_compare.sort():
 					out = False
 					break
 		return out	
@@ -246,8 +259,8 @@ class Graph:
 		return result
 
 		
-
-a = Graph(4,6,3)
-a.affiche_graphe_primal()
-a.clean_graph()
-a.affiche_graphe_primal()
+import copy
+a = Graph(5,10,2)
+b = copy.deepcopy(a)
+print(a.is_chordal())
+b.affiche_graphe_primal()
