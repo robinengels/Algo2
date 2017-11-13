@@ -2,16 +2,17 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 from networkx.algorithms import bipartite
+print()
 
 class Graph:
 	def __init__(self,max_aretes,max_noeuds,proba):
 		self.graph = {}
 		self.nbr_aretes = random.randint(1,max_aretes)
 		#self.nbr_aretes = 3
-		print("nbr aretes " + str(self.nbr_aretes))
+		#print("nbr aretes " + str(self.nbr_aretes))
 		self.nbr_noeuds = random.randint(1,max_noeuds)
 		#self.nbr_noeuds = 7
-		print("nbr noeuds " + str(self.nbr_noeuds))
+		#print("nbr noeuds " + str(self.nbr_noeuds))
 		for i in range(self.nbr_noeuds):
 			self.graph[i+1] = [] #Self.graph est un dico avec en clef le umero du noeud et en element une liste contenant les aretes auxquelles il est connecté
 		
@@ -23,11 +24,11 @@ class Graph:
 
 		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
 		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
-		
+		self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
 		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
 		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
-		print("Test:",self.graph)
+		#print("Test:",self.graph)
 
 	def __str__(self):
 		print(self.graph)
@@ -91,14 +92,14 @@ class Graph:
 		current_clique = []
 		for i in self.graph:
 			voisin = self.voisin(i)
-			print(i,voisin)
+			
 			current_clique = []
 			correct = True
 			for j in voisin:
 				for k in voisin:
 					if k not in self.voisin(j):
 						correct = False
-				print(current_clique)
+				
 				if correct and j not in current_clique:
 					current_clique.append(j)
 
@@ -127,12 +128,19 @@ class Graph:
 
 	def is_chordal(self):
 		self.clean_graph()
+		print("Itération de chordal: ",self.graph)
 		end = False
+		ordre = []
 		while not end:
 			deleted = False
 			clique = self.find_clique()
+			print(clique)
 			for i in clique:
+
+				print("test",i, self.is_simplicial(i))		
 				if self.is_simplicial(i):
+					print("Supprime ",i)
+					ordre.append(i)
 					del self.graph[i]
 					deleted = True
 			if not deleted:
@@ -141,7 +149,7 @@ class Graph:
 			if self.graph == {}:
 				end = True
 				chordal = True
-
+		print(ordre)
 		return end
 
 
@@ -150,14 +158,16 @@ class Graph:
 
 		out = True
 		voisin = self.get_voisins(node)[1:]
+		print(voisin)
 		if voisin != []:
-			to_compare = self.get_voisins(voisin[0])
 			for i in voisin:
-				if self.get_voisins(i).sort() != to_compare.sort():
-					out = False
-					break
-		return out	
 
+				for j in voisin:
+					if j not in self.get_voisins(i):
+
+						out = False
+						break
+		return out	
 
 	def clean_graph(self):
 		"""Efface tout les noeuds qui n'ont aucun voisin"""
@@ -167,16 +177,6 @@ class Graph:
 			voisin.pop()
 			if voisin == []:
 				del self.graph[i]
-
-
-
-
-
-
-
-
-
-
 
 	def berge(self):
 		point_de_depart = 1 #Commence a 1 car le graphe commence a 1, et non a 0
@@ -226,7 +226,6 @@ class Graph:
 			self.dernier_point_visite = temp
 			i += 1
 
-
 	"""def find_clique(self):
 		clique = []
 		voisin = []
@@ -258,9 +257,32 @@ class Graph:
 					result.append(i)
 		return result
 
-		
-import copy
-a = Graph(5,10,2)
-b = copy.deepcopy(a)
-print(a.is_chordal())
-b.affiche_graphe_primal()
+	def test(self):
+		pos = {}
+		graph_affiche = nx.Graph()
+		graph_affiche.add_nodes_from(self.graph.keys())
+
+		for noeud in self.graph.keys():
+			for arete_apartient in self.graph[noeud]:
+				for autre_noeud in self.graph.keys():
+					if noeud != autre_noeud: #Si on ne verifie pas deux fois le meme noeud
+						if arete_apartient in self.graph[autre_noeud]:
+							graph_affiche.add_edge(noeud,autre_noeud)
+		a = nx.is_chordal(graph_affiche)
+		b = self.is_chordal()	
+		if a != b:
+			print(a,b)
+
+
+
+			nx.draw_circular(graph_affiche, with_labels = True)
+			plt.show()
+
+
+a = Graph(1,1,1)
+print(a.is_simplicial(7))
+a.affiche_graphe_primal()
+
+"""while True:
+	a = Graph(5,10,3)
+	a.test()"""
