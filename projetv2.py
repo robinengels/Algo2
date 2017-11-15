@@ -8,13 +8,13 @@ class Graph:
 	def __init__(self,max_aretes,max_noeuds,proba):
 		self.graph = {}
 		self.nbr_aretes = random.randint(1,max_aretes)
-<<<<<<< HEAD
+
 		self.nbr_aretes = 4
 		print("nbr aretes " + str(self.nbr_aretes))
-=======
+
 		#self.nbr_aretes = 3
 		#print("nbr aretes " + str(self.nbr_aretes))
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
+
 		self.nbr_noeuds = random.randint(1,max_noeuds)
 		#self.nbr_noeuds = 7
 		#print("nbr noeuds " + str(self.nbr_noeuds))
@@ -29,13 +29,13 @@ class Graph:
 
 		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
 		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
-<<<<<<< HEAD
+
 		
 		self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite de Berge
-=======
+
 		self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
 		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
+
 		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
 		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
 		#print("Test:",self.graph)
@@ -204,10 +204,11 @@ class Graph:
 	def cherche_aretes(self,point):
 		"""Recherche toutes les aretes qui partent d'un point et les fais passer dans la fonction cherche_points"""
 		arete = 0
-		while not self.result and arete < len(self.graph[point]) and self.graph[point][arete] not in self.aretes_a_eviter:
-			self.aretes_a_eviter.append(self.graph[point][arete])
-			self.cherche_points(self.graph[point][arete])
-			self.aretes_a_eviter.pop()
+		while not self.result and arete < len(self.graph[point]):
+			if self.graph[point][arete] not in self.aretes_a_eviter
+				self.aretes_a_eviter.append(self.graph[point][arete])
+				self.cherche_points(self.graph[point][arete])
+				self.aretes_a_eviter.pop()
 			arete += 1
 
 	def cherche_points(self,arete):
@@ -259,13 +260,13 @@ class Graph:
 					result.append(i)
 		return result
 
-<<<<<<< HEAD
+
 		
 a = Graph(1,5,4)
 #print("clique" + str(a.find_clique()))
 print(a.berge())
 #a.affiche_graphe_bipartie()
-=======
+
 	def test(self):
 		pos = {}
 		graph_affiche = nx.Graph()
@@ -295,4 +296,4 @@ a.affiche_graphe_primal()
 """while True:
 	a = Graph(5,10,3)
 	a.test()"""
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
+
