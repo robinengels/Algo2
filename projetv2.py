@@ -8,13 +8,10 @@ class Graph:
 	def __init__(self,max_aretes,max_noeuds,proba):
 		self.graph = {}
 		self.nbr_aretes = random.randint(1,max_aretes)
-<<<<<<< HEAD
+
 		self.nbr_aretes = 4
 		print("nbr aretes " + str(self.nbr_aretes))
-=======
-		#self.nbr_aretes = 3
-		#print("nbr aretes " + str(self.nbr_aretes))
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
+
 		self.nbr_noeuds = random.randint(1,max_noeuds)
 		#self.nbr_noeuds = 7
 		#print("nbr noeuds " + str(self.nbr_noeuds))
@@ -27,18 +24,9 @@ class Graph:
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
-		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
-		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
-<<<<<<< HEAD
-		
-		self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite de Berge
-=======
-		self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
-		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
-		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
-		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
-		#print("Test:",self.graph)
+		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
+		self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+
 
 	def __str__(self):
 		print(self.graph)
@@ -96,31 +84,42 @@ class Graph:
 		nx.draw_circular(graph_affiche, with_labels = True)
 		plt.show()
 
-	def find_clique(self):
-		clique = []
+	def find_clique(self,taille_max = 100000000000):
+		clique = [[]]
 		voisin = []
 		current_clique = []
 		for i in self.graph:
+			print("Inspection du noeuds : ",i)
 			voisin = self.voisin(i)
-			
+			print("voisin du noeud ",i," : ",voisin)
 			current_clique = []
 			correct = True
 			for j in voisin:
+				to_test = self.voisin(j) 
+				print("J :",j,"voisin : ",to_test)
 				for k in voisin:
-					if k not in self.voisin(j):
+					print(k, "in ?",to_test)
+					if k not in to_test:
 						correct = False
-				
-				if correct and j not in current_clique:
-					current_clique.append(j)
+					print(correct)
+					if correct and j not in current_clique:
+						current_clique.append(j)
+			print(current_clique)
 
 
 
 
-
-			if len(current_clique) >= len(clique):
-				clique = current_clique
-
+			if len(current_clique) > len(clique[0]) and len(current_clique)<=taille_max:
+				clique = [current_clique]
+			elif len(current_clique) == len(clique[0]):
+				clique.append(current_clique)
 		return clique
+
+
+
+
+
+
 
 	def voisin(self,node):
 		"""Node est le numéro du noeuds pour le quelle on veut récupérer la liste des voisins"""
@@ -141,26 +140,33 @@ class Graph:
 		print("Itération de chordal: ",self.graph)
 		end = False
 		ordre = []
+		taille_max = 1000000000000000000
 		while not end:
 			deleted = False
-			clique = self.find_clique()
-			print(clique)
-			for i in clique:
+			clique = self.find_clique(taille_max)
+			taille_max = len(clique[0])
+			for j in clique:
+				for i in j:
 
-				print("test",i, self.is_simplicial(i))		
-				if self.is_simplicial(i):
-					print("Supprime ",i)
-					ordre.append(i)
-					del self.graph[i]
-					deleted = True
+		
+					if i in self.graph and self.is_simplicial(i):
+		
+						ordre.append(i)
+						del self.graph[i]
+						deleted = True
+
 			if not deleted:
-				end = True
+				print(clique)
+				taille_max -= 1
+				if taille_max < 3:
+					end = True 
+
 				chordal = False
 			if self.graph == {}:
 				end = True
 				chordal = True
 		print(ordre)
-		return end
+		return chordal
 
 
 	def is_simplicial(self,node):
@@ -168,7 +174,7 @@ class Graph:
 
 		out = True
 		voisin = self.get_voisins(node)[1:]
-		print(voisin)
+
 		if voisin != []:
 			for i in voisin:
 
@@ -228,26 +234,6 @@ class Graph:
 				self.points_visites.pop()
 			i += 1
 
-	"""def find_clique(self):
-		clique = []
-		voisin = []
-		current_clique = []
-		for i in self.graph:
-			voisin = self.get_voisins(i)
-			print("Voisins: ",i,voisin)
-			current_clique = []
-			correct = True
-			for j in voisin:
-				for k in voisin:
-					if k not in self.get_voisins(j):
-						correct = False
-				if correct and j not in current_clique:
-					current_clique.append(j)
-
-			if ((clique == [] and len(current_clique)>=3) or (clique != [] and len(current_clique) >= len(clique))):
-				clique = current_clique
-
-		return clique"""
 
 	def get_voisins(self,node):
 		"""Node est le numéro du noeuds pour lequel on veut récupérer la liste des voisins"""
@@ -259,13 +245,7 @@ class Graph:
 					result.append(i)
 		return result
 
-<<<<<<< HEAD
-		
-a = Graph(1,5,4)
-#print("clique" + str(a.find_clique()))
-print(a.berge())
-#a.affiche_graphe_bipartie()
-=======
+
 	def test(self):
 		pos = {}
 		graph_affiche = nx.Graph()
@@ -288,11 +268,11 @@ print(a.berge())
 			plt.show()
 
 
-a = Graph(1,1,1)
-print(a.is_simplicial(7))
-a.affiche_graphe_primal()
 
-"""while True:
-	a = Graph(5,10,3)
-	a.test()"""
->>>>>>> 00bbe174b387dc1524ed93ab6db18cb0b253a9b4
+#while True:
+a = Graph(5,10,3)
+
+print(a.is_chordal())
+a.affiche_graphe_primal()
+	#a.test()
+
