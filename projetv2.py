@@ -9,8 +9,6 @@ class Graph:
 		self.graph = {}
 		self.nbr_aretes = random.randint(1,max_aretes)
 
-		self.nbr_aretes = 4
-		print("nbr aretes " + str(self.nbr_aretes))
 
 		self.nbr_noeuds = random.randint(1,max_noeuds)
 		#self.nbr_noeuds = 7
@@ -24,8 +22,22 @@ class Graph:
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
+		#self.graph = {1: [1], 2: [1, 4], 3: [3, 4], 4: [1, 2], 5: [2], 6: [1, 4], 7: [1, 4], 10: [3]}
 		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
-		self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+		#self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+
+		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
+		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
+
+		
+		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite de Berge
+
+		#self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
+		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
+
+		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
+		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
+		#print("Test:",self.graph)
 
 
 	def __str__(self):
@@ -89,22 +101,22 @@ class Graph:
 		voisin = []
 		current_clique = []
 		for i in self.graph:
-			print("Inspection du noeuds : ",i)
+			#print("Inspection du noeuds : ",i)
 			voisin = self.voisin(i)
-			print("voisin du noeud ",i," : ",voisin)
+			#print("voisin du noeud ",i," : ",voisin)
 			current_clique = []
 			correct = True
 			for j in voisin:
 				to_test = self.voisin(j) 
-				print("J :",j,"voisin : ",to_test)
+				#print("J :",j,"voisin : ",to_test)
 				for k in voisin:
-					print(k, "in ?",to_test)
+					#print(k, "in ?",to_test)
 					if k not in to_test:
 						correct = False
-					print(correct)
+					#print(correct)
 					if correct and j not in current_clique:
 						current_clique.append(j)
-			print(current_clique)
+			#print(current_clique)
 
 
 
@@ -137,7 +149,7 @@ class Graph:
 
 	def is_chordal(self):
 		self.clean_graph()
-		print("Itération de chordal: ",self.graph)
+		#print("Itération de chordal: ",self.graph)
 		end = False
 		ordre = []
 		taille_max = 1000000000000000000
@@ -145,6 +157,8 @@ class Graph:
 			deleted = False
 			clique = self.find_clique(taille_max)
 			taille_max = len(clique[0])
+			#print("Taille max",taille_max)
+			#print("Cliqe",clique)
 			for j in clique:
 				for i in j:
 
@@ -153,19 +167,20 @@ class Graph:
 		
 						ordre.append(i)
 						del self.graph[i]
+						taille_max = 100000000000000000
 						deleted = True
 
 			if not deleted:
-				print(clique)
+				#print(clique)
 				taille_max -= 1
-				if taille_max < 3:
+				if taille_max < 2:
 					end = True 
 
 				chordal = False
 			if self.graph == {}:
 				end = True
 				chordal = True
-		print(ordre)
+		#print(ordre)
 		return chordal
 
 
@@ -210,10 +225,11 @@ class Graph:
 	def cherche_aretes(self,point):
 		"""Recherche toutes les aretes qui partent d'un point et les fais passer dans la fonction cherche_points"""
 		arete = 0
-		while not self.result and arete < len(self.graph[point]) and self.graph[point][arete] not in self.aretes_a_eviter:
-			self.aretes_a_eviter.append(self.graph[point][arete])
-			self.cherche_points(self.graph[point][arete])
-			self.aretes_a_eviter.pop()
+		while not self.result and arete < len(self.graph[point]):
+			if self.graph[point][arete] not in self.aretes_a_eviter:
+				self.aretes_a_eviter.append(self.graph[point][arete])
+				self.cherche_points(self.graph[point][arete])
+				self.aretes_a_eviter.pop()
 			arete += 1
 
 	def cherche_points(self,arete):
@@ -246,6 +262,7 @@ class Graph:
 		return result
 
 
+
 	def test(self):
 		pos = {}
 		graph_affiche = nx.Graph()
@@ -266,13 +283,15 @@ class Graph:
 
 			nx.draw_circular(graph_affiche, with_labels = True)
 			plt.show()
+			self.affiche_graphe_primal()
 
+import os
+cmp = 0
+while True:
+	cmp+=1
+	print(cmp)
 
-
-#while True:
-a = Graph(5,10,3)
-
-print(a.is_chordal())
-a.affiche_graphe_primal()
-	#a.test()
-
+	a = Graph(5,10,3)
+	a.test()
+	del a
+	os.system("cls")
