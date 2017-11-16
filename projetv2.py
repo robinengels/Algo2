@@ -24,8 +24,22 @@ class Graph:
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
+
 		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
 		self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+
+		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
+		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
+
+		
+		self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite de Berge
+
+		self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
+		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
+
+		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
+		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
+		#print("Test:",self.graph)
 
 
 	def __str__(self):
@@ -210,10 +224,11 @@ class Graph:
 	def cherche_aretes(self,point):
 		"""Recherche toutes les aretes qui partent d'un point et les fais passer dans la fonction cherche_points"""
 		arete = 0
-		while not self.result and arete < len(self.graph[point]) and self.graph[point][arete] not in self.aretes_a_eviter:
-			self.aretes_a_eviter.append(self.graph[point][arete])
-			self.cherche_points(self.graph[point][arete])
-			self.aretes_a_eviter.pop()
+		while not self.result and arete < len(self.graph[point]):
+			if self.graph[point][arete] not in self.aretes_a_eviter
+				self.aretes_a_eviter.append(self.graph[point][arete])
+				self.cherche_points(self.graph[point][arete])
+				self.aretes_a_eviter.pop()
 			arete += 1
 
 	def cherche_points(self,arete):
@@ -246,6 +261,7 @@ class Graph:
 		return result
 
 
+
 	def test(self):
 		pos = {}
 		graph_affiche = nx.Graph()
@@ -275,4 +291,5 @@ a = Graph(5,10,3)
 print(a.is_chordal())
 a.affiche_graphe_primal()
 	#a.test()
+
 
