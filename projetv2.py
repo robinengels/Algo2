@@ -22,9 +22,15 @@ class Graph:
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
+<<<<<<< HEAD
 		#self.graph = {1: [1], 2: [1, 4], 3: [3, 4], 4: [1, 2], 5: [2], 6: [1, 4], 7: [1, 4], 10: [3]}
 		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
 		#self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+=======
+
+		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
+		self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
+>>>>>>> 2f8ba908fcb5972e6023b85982d087afe07d0d8e
 
 		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
 		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
@@ -291,7 +297,19 @@ while True:
 	cmp+=1
 	print(cmp)
 
+<<<<<<< HEAD
 	a = Graph(5,10,3)
 	a.test()
 	del a
 	os.system("cls")
+=======
+
+#while True:
+a = Graph(5,10,3)
+
+print(a.is_chordal())
+a.affiche_graphe_primal()
+	#a.test()
+
+
+>>>>>>> 2f8ba908fcb5972e6023b85982d087afe07d0d8e
