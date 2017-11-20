@@ -15,35 +15,13 @@ class Graph:
 		#print("nbr noeuds " + str(self.nbr_noeuds))
 		for i in range(self.nbr_noeuds):
 			self.graph[i+1] = [] #Self.graph est un dico avec en clef le umero du noeud et en element une liste contenant les aretes auxquelles il est connecté
-		
+
 
 		for i in range(self.nbr_aretes): #Itere pour chaque arete et commence à 0
 			for j in self.graph.keys(): #Itere a chaque noeud
 				if random.randint(1,proba) == 1: #Une chance sur trois que le noeud fasse partie de l'arrete i, comme ca c'est moins frequent
 					self.graph[j].append(i+1) #+1 parce que i commence à 0
 
-<<<<<<< HEAD
-		#self.graph = {1: [1], 2: [1, 4], 3: [3, 4], 4: [1, 2], 5: [2], 6: [1, 4], 7: [1, 4], 10: [3]}
-		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
-		#self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
-=======
-
-		#self.graph = {2: [2, 3], 3: [2], 4: [2], 5: [1], 6: [2, 3], 7: [2, 4], 8: [2, 3], 9: [1, 3], 10: [4]}
-		self.graph = {1: [3], 2: [1, 2], 3: [1, 2], 4: [1, 2, 3], 5: [4], 6: [2, 4], 7: [1, 4], 9: [2, 3]}
->>>>>>> 2f8ba908fcb5972e6023b85982d087afe07d0d8e
-
-		#Exemple d'un graphe qui est Cordal e=[(1,2),(1,3),(2,3),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6)]
-		#self.graph = {1:[1,2],2:[1,3],3:[2,3],4:[2,4],5:[3,4],6:[3,5],7:[3,6],8:[4,5],9:[4,6],10:[5,6]}
-
-		
-		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite de Berge
-
-		#self.graph  = {3: [3], 4: [4], 5: [1, 4], 7: [2, 5], 8: [4, 5], 9: [1, 2, 3], 10: [1, 4]} # Graqhe non cordal pour test
-		#self.graph = {1:[1],2:[1,2],3:[1,2,3],4:[4],5:[3],6:[3],7:[]} #temporaire, pour faire des testes sur la cyclicite
-
-		#self.graph = [[2, 4, 5, 6, 7], [1, 7, 8], [2, 5, 6, 7], [2, 5, 6], [1, 3, 5, 6, 7, 8], [1, 2, 3, 4, 5], [3, 4, 7], [1, 2, 5, 7], [4], [1, 3, 4, 5]]
-		#self.graph = [[], [1, 2], [2], [2, 3], [2], [2, 3], [2, 3]]
-		#print("Test:",self.graph)
 
 
 	def __str__(self):
@@ -51,30 +29,32 @@ class Graph:
 		for i in range(len(self.graph)): #Commence a 0
 			print("Le noeud "+str(i+1)+" fais partie de l'hyper-arete: ",end='')
 			print(self.graph[i])
-	
+
 		return("")
 
 
 	def affiche_graphe_bipartie(self):
+		""" Fonction qui affiche le graphe en mode bipartie"""
 		graph_affiche =  nx.Graph()
 		left_nodes = self.graph.keys()
-		right_nodes = [chr(i+96) for i in range(1,self.nbr_aretes+1)]
+		right_nodes = [chr(i+96) for i in range(1,self.nbr_aretes+1)] #Transforme les chiffres en lettre
 		graph_affiche.add_nodes_from(left_nodes,bipartite=0)
 		graph_affiche.add_nodes_from(right_nodes,bipartite=1)
 
 		edge = []
-		for i in self.graph.keys():
+		for i in self.graph.keys(): #On définit a quelle arrete apartien chaque point
 			current_node = i
 
 			if self.graph[i] != []: #Si le point n'appartient a aucune aretes, alors pas besoin de chercher les autres points
 				for j in self.graph[i]:
 					current_edge = chr(j+96)
-					edge.append((current_node,current_edge))
+					edge.append((current_node,current_edge))#On associe a chaque point son arrete 
 
 		graph_affiche.add_edges_from(edge)
-		
+
 		pos = dict()
 		cmpt = 0
+		#On positionne les arretes d'un coté et les noeuds de l'autres
 		for i in left_nodes:
 			cmpt += 1
 			pos.update({i:(1,-cmpt)})
@@ -82,11 +62,12 @@ class Graph:
 		for i in right_nodes:
 			cmpt += 1
 			pos.update({i:(2,-cmpt)})
-		print(graph_affiche.nodes())
-		nx.draw(graph_affiche, pos=pos,with_labels = True)
+
+		nx.draw(graph_affiche, pos=pos,with_labels = True)#On affiche le graphe
 		plt.show()
 
 	def affiche_graphe_primal(self):
+		"""Fonction qui affiche le graphe primal"""
 		pos = {}
 		graph_affiche = nx.Graph()
 		graph_affiche.add_nodes_from(self.graph.keys())
@@ -97,37 +78,40 @@ class Graph:
 					if noeud != autre_noeud: #Si on ne verifie pas deux fois le meme noeud
 						if arete_apartient in self.graph[autre_noeud]:
 							graph_affiche.add_edge(noeud,autre_noeud)
-				
+
 
 		nx.draw_circular(graph_affiche, with_labels = True)
 		plt.show()
 
 	def find_clique(self,taille_max = 100000000000):
+		"""Fonction qui renvoye les plus grande clique trouvée plus petite que la taille max par défaut assigné a l'infini"""
 		clique = [[]]
 		voisin = []
 		current_clique = []
-		for i in self.graph:
-			#print("Inspection du noeuds : ",i)
+		
+		for i in self.graph:#Test chaque point du graphe
+
 			voisin = self.voisin(i)
-			#print("voisin du noeud ",i," : ",voisin)
 			current_clique = []
 			correct = True
-			for j in voisin:
-				to_test = self.voisin(j) 
-				#print("J :",j,"voisin : ",to_test)
-				for k in voisin:
-					#print(k, "in ?",to_test)
+
+			for j in voisin:#On regarde dans les voisin du point
+				
+				to_test = self.voisin(j)
+
+				for k in voisin: #On vérifie que tout les voisin du point I se retrouve dans les voisins de J
+
 					if k not in to_test:
 						correct = False
-					#print(correct)
+
 					if correct and j not in current_clique:
 						current_clique.append(j)
-			#print(current_clique)
 
 
 
 
-			if len(current_clique) > len(clique[0]) and len(current_clique)<=taille_max:
+
+			if len(current_clique) > len(clique[0]) and len(current_clique)<=taille_max: #On vérifie la taille de la clique trouvée
 				clique = [current_clique]
 			elif len(current_clique) == len(clique[0]):
 				clique.append(current_clique)
@@ -143,9 +127,9 @@ class Graph:
 		"""Node est le numéro du noeuds pour le quelle on veut récupérer la liste des voisins"""
 		result = [node]
 		arc = self.graph[node]
-		for i in self.graph:
+		for i in self.graph:#On regarde tout les points du graphe
 			for j in arc:
-				if j in self.graph[i] and i not in result:
+				if j in self.graph[i] and i not in result:#Si le point est dans un arc commun a Node alors il sont voisin
 					result.append(i)
 
 
@@ -154,39 +138,42 @@ class Graph:
 
 
 	def is_chordal(self):
-		self.clean_graph()
-		#print("Itération de chordal: ",self.graph)
+		"""Renvoie True si le graphe est cordal"""
+		
+		self.clean_graph()#Retire tout les noeuds seuls
+
 		end = False
 		ordre = []
 		taille_max = 1000000000000000000
+		
 		while not end:
-			deleted = False
+			
+			deleted = False #Serts a savoir si un noeuds a été éffacé
 			clique = self.find_clique(taille_max)
-			taille_max = len(clique[0])
-			#print("Taille max",taille_max)
-			#print("Cliqe",clique)
-			for j in clique:
-				for i in j:
+			taille_max = len(clique[0])#Définit la taille maximum = la taille de la clique trouvée
 
-		
-					if i in self.graph and self.is_simplicial(i):
-		
+			for j in clique:
+				for i in j:#On parcourt une des clique trouvée
+					if i in self.graph and self.is_simplicial(i):#Si le sommet est simplicial on le supprime
+
 						ordre.append(i)
 						del self.graph[i]
-						taille_max = 100000000000000000
+						taille_max = 100000000000000000 #On remet la taille max a infini
 						deleted = True
 
 			if not deleted:
-				#print(clique)
+				"""Si aucun sommet simplicial n'est supprimé
+				il est possible qu'un sommet simplcial se trouve dans une clique plus petite"""
+
 				taille_max -= 1
 				if taille_max < 2:
-					end = True 
+					end = True #Si on a testé toute les clique les graphe n'est pas cordal
 
 				chordal = False
-			if self.graph == {}:
+			if self.graph == {}: #Si on a supprimé tout il est cordal
 				end = True
 				chordal = True
-		#print(ordre)
+
 		return chordal
 
 
@@ -198,13 +185,12 @@ class Graph:
 
 		if voisin != []:
 			for i in voisin:
-
-				for j in voisin:
+				for j in voisin:#Vérifie pour chaque voisin qu'il a les même voisin commun
 					if j not in self.get_voisins(i):
 
 						out = False
 						break
-		return out	
+		return out
 
 	def clean_graph(self):
 		"""Efface tout les noeuds qui n'ont aucun voisin"""
@@ -212,7 +198,7 @@ class Graph:
 		for i in cle:
 			voisin = self.get_voisins(i)
 			voisin.pop()
-			if voisin == []:
+			if voisin == []: #Si il n'as aucun voisin on le supprime
 				del self.graph[i]
 
 	def berge(self):
@@ -220,14 +206,14 @@ class Graph:
 		self.points_visites = [] #Stocke les points visites pour eviter les allers retours, et si on tombe deux fois sur le meme point, alors il est cyclique
 		self.aretes_a_eviter = [] #Stocke les aretes deja parcourues, pour ne pas passer deux fois sur la meme arete
 		self.result = False #Si un cycle est trouve, alors cette valeur vaudra True
-		
+
 		while not self.result and point_de_depart < len(self.graph)+1: #Si un cycle a ete trouve, ou que tout les noeuds ont ete fouilles, alors la boucle s'arrete
 			self.aretes_a_eviter = [] #Nettoie la liste
 			self.points_visites = [point_de_depart] #Nettoie la liste et y place uniquement le point de depart
 			self.cherche_aretes(point_de_depart)
 			point_de_depart += 1
 		return(self.result)
-	
+
 	def cherche_aretes(self,point):
 		"""Recherche toutes les aretes qui partent d'un point et les fais passer dans la fonction cherche_points"""
 		arete = 0
@@ -269,47 +255,10 @@ class Graph:
 
 
 
-	def test(self):
-		pos = {}
-		graph_affiche = nx.Graph()
-		graph_affiche.add_nodes_from(self.graph.keys())
 
-		for noeud in self.graph.keys():
-			for arete_apartient in self.graph[noeud]:
-				for autre_noeud in self.graph.keys():
-					if noeud != autre_noeud: #Si on ne verifie pas deux fois le meme noeud
-						if arete_apartient in self.graph[autre_noeud]:
-							graph_affiche.add_edge(noeud,autre_noeud)
-		a = nx.is_chordal(graph_affiche)
-		b = self.is_chordal()	
-		if a != b:
-			print(a,b)
+def hypercycle(graph):
+	print("Le graphe est acyclique au sens de Berge : ", graph.berge())
+	print("Le graphe est alpha-acyclique :", graph.is_chordal())
 
 
-
-			nx.draw_circular(graph_affiche, with_labels = True)
-			plt.show()
-			self.affiche_graphe_primal()
-
-import os
-cmp = 0
-while True:
-	cmp+=1
-	print(cmp)
-
-<<<<<<< HEAD
-	a = Graph(5,10,3)
-	a.test()
-	del a
-	os.system("cls")
-=======
-
-#while True:
-a = Graph(5,10,3)
-
-print(a.is_chordal())
-a.affiche_graphe_primal()
-	#a.test()
-
-
->>>>>>> 2f8ba908fcb5972e6023b85982d087afe07d0d8e
+hypercycle(Graph(5,10,2))
