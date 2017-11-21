@@ -254,8 +254,8 @@ def hypercycle(graph):
 		print("Ce graphe est cyclique")
 
 def main():
-	graph = Graph(15,10,2)
-	hypercycle(graph)
+	graph = Graph(15,10,4)
 	graph.affiche_graphe_bipartie()
+	hypercycle(graph)
 
 main()
